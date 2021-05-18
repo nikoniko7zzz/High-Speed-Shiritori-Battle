@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HIGH_SPEED_SHIRITORI</title>
+    <meta name="description" content=“ワンニャンチャット”>
+
+    <!-- ogp SNSでwebサイトが共有された時にどう見えるかの設定 -->
+    <meta property="og:title" content="chat"><!-- ページのタイトル -->
+    <meta property="og:type" content="website" /><!-- ページのタイプ website または blog または article -->
+    <meta property="og:url" content="#" /><!-- ページのURL -->
+    <meta property="og:site_name" content="chat" /><!-- サイト名 -->
+    <meta property="og:description" content="“ワンニャンチャット”" /><!-- ページの概要として表示される説明文 -->
+
+    <meta name="format-detection" content="telephone=no"><!-- 電話番号で電話をかけるのをやめる -->
+
+    <link rel="canonical" href="#">
+    <link rel="stylesheet" type="text/css" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/sanitize.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <!-- <link rel="stylesheet" type="text/css" media="screen and (min-width:641px)" href="css/reset.css" /> -->
+    <!-- あらかじめcssを読み込んでいるので設定しなくてOK-->
+    <link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet">
+    <!-- <link rel="shortcut icon" href="img/favicon.ico">Favicon Generatorで制作する -->
+
+    <!-- <script type="text/javascript" src="jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="imageselect.js"></script>
+    
+    <link href="imageselect.css" media="screen" rel="stylesheet" type="text/css" /> -->
+
+
+    <style>
+        #output1 li {
+            background: rgb(141, 194, 224);
+        }
+        #output2 li {
+            background: rgb(228, 149, 228);
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1 style="text-align: center; margin: 0;">High Speed Shiritori Battle</h1>
+    <p  style="text-align: center;">theme</p>
+    <p  style="text-align: center;">【 し 】</p>
+    <!-- データ出力場所 -->
+    <div class="output">
+        <ul id="scroll">
+            <div id="output1"></div>
+        </ul>
+        <ul id="output2"></ul>
+    </div>
+    <div class="box">
+        <div id="waza1"></div>
+        <div id="waza2"></div>
+    </div>
+    <div class="box">
+        <div class="waza_box">
+            <div class="waza1-1"></div>
+            <div class="waza1-2"></div>
+            <div class="waza1-3"></div>
+            <div class="waza2-1"></div>
+            <div class="waza2-2"></div>
+            <div class="waza2-3"></div>
+        </div>
+    </div>
+    <!-- データ入力場所 -->
+    <div class="box">
+        <!-- <p>player1</p> -->
+        <div  class="player1">
+            <ul>
+                <li>
+                    <label for="name">player1</label>
+                    <input type="text" id="name1" value="name" style="border: 1px solid blue;">
+                </li>
+                <li>
+                    <input type="text" id="text1" style="border: 1px solid blue;">
+                </li>
+            </ul>
+        </div><!-- player1 -->
+        <div  class="player2">
+            <!-- <p>player2</p> -->
+            <ul>
+                <li>
+                    <label for="name">player2</label>
+                    <input type="text" id="name2" value="name" style="border: 1px solid blue;">
+                </li>
+                <li>
+                    <input type="text" id="text2" style="border: 1px solid blue;">
+                </li>
+            </ul>
+        </div><!-- player2 -->
+    </div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="index.js"></script> -->
+
+
+
+
+    <!-- FireBase SDKの貼り付け場所↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+                                                    <!-- firebase-app.jsの"-app"は削除する ---->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+    <!-- これはどこから↑？？？・ -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDemA35bzlAGqJtsHngRa6q8nLvTOCnMiE",
+            authDomain: "highspeedshiritori.firebaseapp.com",
+            projectId: "highspeedshiritori",
+            storageBucket: "highspeedshiritori.appspot.com",
+            messagingSenderId: "263973208648",
+            appId: "1:263973208648:web:abc87df1262c30574b0e7d"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        // これは自分で用意↓↓↓
+        // firebase.firestore().collection('コレクション名'); 新しく作ったコレクションの場所を変数dbにする
+        const db1 = firebase.firestore().collection('highspeedshiritori1');
+        const db2 = firebase.firestore().collection('highspeedshiritori2');
+        firebase.analytics();
+
+    </script>
+    <!-- FireBase SDKの貼り付け場所↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ -->
+    <script>
+        // 日時をいい感じの形式にする関数
+        function convertFromFirestoreTimestampToDatetime(timestamp) {
+            const _d = timestamp ? new Date(timestamp * 1000) : new Date();
+            const Y = _d.getFullYear();
+            const m = (_d.getMonth() + 1).toString().padStart(2, '0');
+            const d = _d.getDate().toString().padStart(2, '0');
+            const H = _d.getHours().toString().padStart(2, '0');
+            const i = _d.getMinutes().toString().padStart(2, '0');
+            const s = _d.getSeconds().toString().padStart(2, '0');
+            return `${Y}/${m}/${d} ${H}:${i}:${s}`;
+        }
+        // 送信ボタンを押したら、nameとtextとtimeの値をdb1にデータを入れるに入れる--------------------------
+        $('#text1').keypress(function (e) {
+            if (e.which === 13) {
+                const inputData = {
+                    // nameはfirebaseのフィールド名
+                    name1: $('#name1').val(),
+                    text1: $('#text1').val(),
+                    time: firebase.firestore.FieldValue.serverTimestamp(),// 登録日時
+                };
+                // dbにデータを入れるにデータを入れる
+                db1.add(inputData);
+                // 隠しコマンド
+                const str = $('#text1').val();
+                const b = str.slice(-1);
+                if (b === 'か') {
+                    $('#waza1').text('界王拳');
+                }
+                // 空白にする
+                $('#text1').val('');
+            }
+        });
+
+        $('#text2').keypress(function (e) {
+            if (e.which === 13) {
+                const inputData = {
+                    // nameはfirebaseのフィールド名
+                    name2: $('#name2').val(),
+                    text2: $('#text2').val(),
+                    time: firebase.firestore.FieldValue.serverTimestamp(),// 登録日時
+                };
+                // dbにデータを入れるにデータを入れる
+                db2.add(inputData);
+                // 隠しコマンド
+                const str = $('#text2').val();
+                const b = str.slice(-1);
+                if (b === 'か') {
+                    $('#waza2').text('界王拳');
+                }
+                // 空白にする
+                $('#text2').val('');
+            }
+        });
+
+
+
+        //  データ受信処理のコード----------------------------------------
+        // onSnapshot オンライン上のデータベースでデータの追加・削除・変更が行われたタイミングで{}内が動いてリアルタイムに反映できる
+        // querySnapshot chat10の中身全部が入っているところ
+        db1.orderBy('time', 'asc').onSnapshot(function (querySnapshot) {
+            const dataArray = [];
+            // snapshotの中、docに欲しい物が入ってる。
+            // docの中の下記が欲しいからforEachでdocの回数分処理する
+            querySnapshot.docs.forEach(function (doc) {
+                // data→name, text, timeやらが入ってる
+                // ↑２つを dataオブジェクトにする
+                const data = {
+                    // id→ドキュメント名（ランダム英数字のやつ）
+                    id: doc.id,
+                    // data()の中には配列dataのname,text,timeのが入っている
+                    data: doc.data(),
+                };
+                // dataオブジェクトをdataArray配列(javasprictの形の配列)に追加(修正や変更はpushじゃない）
+                dataArray.push(data);
+            });
+
+            console.log(dataArray);
+            // // dataArray配列(javasprictの形の配列)をhtmlに反映させる------------------------------
+            // console.log(tagArray);
+            const tagArray = [];
+            dataArray.forEach(function (data) {
+                // ` ${変数名} で htmlコードと変数を＋を使わないで書ける
+                // data.id データのキー名
+                tagArray.push(`
+                <li id="${data.id}" class="box">
+                    <p class="AnswerText">${data.data.text1}</p>
+                </li> 
+                `);
+            });
+            $('#output1').html(tagArray);
+        });
+
+
+        //  データ受信処理のコード----------------------------------------
+        // onSnapshot オンライン上のデータベースでデータの追加・削除・変更が行われたタイミングで{}内が動いてリアルタイムに反映できる
+        // querySnapshot chat10の中身全部が入っているところ
+        db2.orderBy('time', 'asc').onSnapshot(function (querySnapshot) {
+            const dataArray = [];
+            // snapshotの中、docに欲しい物が入ってる。
+            // docの中の下記が欲しいからforEachでdocの回数分処理する
+            querySnapshot.docs.forEach(function (doc) {
+                // data→name, text, timeやらが入ってる
+                // ↑２つを dataオブジェクトにする
+                const data = {
+                    // id→ドキュメント名（ランダム英数字のやつ）
+                    id: doc.id,
+                    // data()の中には配列dataのname,text,timeのが入っている
+                    data: doc.data(),
+                };
+                // dataオブジェクトをdataArray配列(javasprictの形の配列)に追加(修正や変更はpushじゃない）
+                dataArray.push(data);
+            });
+
+            console.log(dataArray);
+            // // dataArray配列(javasprictの形の配列)をhtmlに反映させる------------------------------
+            // console.log(tagArray);
+            const tagArray = [];
+            dataArray.forEach(function (data) {
+                // ` ${変数名} で htmlコードと変数を＋を使わないで書ける
+                // data.id データのキー名
+                tagArray.push(`
+                <li id="${data.id}" class="box">
+                    <p class="AnswerText">${data.data.text2}</p>
+                </li> 
+                `);
+            });
+            $('#output2').html(tagArray);
+        });
+    </script>
+    <script>
+        let target = document.getElementById('output1');
+            target.scrollIntoView(false);
+    </script>
+</body>
+
+</html>

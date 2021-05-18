@@ -1,0 +1,138 @@
+
+/*全体　共通
+最初から設定してあるので特に変更
+しなくても大丈夫です♪
+-----------------*/
+body{
+	font-family: Roboto, "Yu Gothic Medium", "游ゴシック Medium", YuGothic,  "ヒラギノ角ゴ Pro W3", "メイリオ", sans-serif;
+	line-height: 1.75;
+	font-size: 30px;
+	width: 960px;
+	margin: 0 auto;
+	padding: 0px;
+}
+
+/*　パディングをサイズ内側にする処理　*/
+* {
+	padding:0;
+	margin:0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/*ーーーーーーーーーーー*/
+/*この下から記述*/
+/*ーーーーーーーーーーー*/
+/*どの部分のcssに対して
+命令をしているのかコメントを
+記載しよう！
+---------------------*/
+/* 共通
+---------------------*/
+.box {
+	display: flex;
+	/* margin: 0 auto; */
+	justify-content: center;
+	align-items: center;
+	/* flex-direction: column; */
+}
+.output{
+	height: 480px;
+	display: flex;
+	margin: 0 auto;
+	/* overflow-y: scroll;  */
+}
+#scroll {
+	overflow-y: scroll;
+}
+#output1 {
+	height: 1000px;
+}
+.AnswerName {
+	width: 150px;
+	height: 50px;
+	line-height: 50px;
+}
+.AnswerText {
+	padding-left: 20px;
+	width: 480px;
+	height: 50px;
+	line-height: 50px;
+}
+.AnswerTime {
+	width: 200px;
+	height: 50px;
+	line-height: 50px;
+}
+.player1, .player2 {
+	width: 300px;
+	margin: 10px;
+}
+label {
+	height: 50px;
+	height: 50px;
+	line-height: 50px;
+}
+input {
+	height: 50px;
+	height: 50px;
+	line-height: 50px;
+}
+#text1, #text2 {
+	width: 300px;
+}
+#waza1,#waza2 {
+	width: 480px;
+	text-align: center;
+	display: flex;
+}
+.waza_box {
+	display: flex;
+	height: 50px;
+}
+.waza1-1, .waza1-2, .waza1-3 {
+	width: 160px;
+	background-color: blue;
+}
+.waza2-1, .waza2-2, .waza2-3 {
+	width: 160px;
+	background-color: red;
+}
+
+
+
+
+
+/* .box_wrap {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.title_yellow {
+	font-size: 24px;
+	color: #ffd61a;
+	margin: 108px 0 24px;
+}
+.title_black {
+	font-size: 24px;
+	color: #222222;
+	margin: 108px 0 24px;
+}
+.sab_title {
+	margin-bottom: 64px;
+}
+a {
+	display: block;
+	color: black;
+}
+img {
+max-width: 100%;
+height: auto;
+} */
+
+/*header
+---------------------*/
